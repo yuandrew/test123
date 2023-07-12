@@ -1,0 +1,33 @@
+name: Check for Unsafe Code Changes
+on: 
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  check-unsafe-reviewers:
+    name: Check for Unsafe Code Changes
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Perform unsafe code check
+      shell: pwsh
+      run: .github/workflows/scripts/unsafe_reviewers.ps1
+      env:
+        ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+    #     CHECK_RUN_ID: ${{ github.event.check_run.id }}
+    # - name: Mark job as Success or Neutral
+    #   run: |
+    #     if failure()
+    #     then
+    #       echo "The"
+    #       ${{ neutral() }}
+    #     else
+    #       echo "No files with unsafe code was touched"
+    #     fi
+
+

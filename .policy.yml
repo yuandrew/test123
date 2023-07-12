@@ -1,0 +1,46 @@
+# the high level policy
+policy:
+  approval:
+    - unsafe reviewers
+
+#   disapproval:
+#     requires:
+#       organizations:
+#         - "palantir"
+
+# the list of rules
+approval_rules:
+  - name: unsafe reviewers
+    description: "A rule that requires unsafe reviewers when unsafe code is touched"
+    if:
+      # "has_successful_status" is satisfied if the status checks that are specified
+      # are marked successful on the head commit of the pull request.
+      has_successful_status:
+        - "Check for Unsafe Code Changes"
+    requires:
+      count: 1
+      teams:
+        - "microsoft/hvlite-unsafe-reviewers"
+    options:
+      # If true, the approvals of someone who has committed to the pull request are
+      # considered when calculating the status. The pull request author is considered
+      # a contributor. If allow_author and allow_contributor would disagree, this option
+      # always wins. False by default.
+      allow_contributor: true
+      # Automatically request reviewers when a Pull Request is opened
+      # if this rule is pending, there are no assigned reviewers, and if the
+      # Pull Request is not in Draft.
+      # Reviewers are selected based on the set of requirements for this rule
+      # and reviewers can be augmented using the mode option.
+      request_review:
+        # False by default
+        enabled: true
+
+        # mode modifies how reviewers are selected. `all-users` will request all users
+        # who are able to approve the pending rule. `random-users` selects a small
+        # set of random users based on the required count of approvals. `teams` will 
+        # request teams to review. Teams must have explicit access defined under
+        # https://github.com/<org>/<repo>/settings/access in order to be tagged,
+        # at least until https://github.com/palantir/policy-bot/issues/165 is fixed.
+        # Defaults to 'random-users'.
+        mode: teams
