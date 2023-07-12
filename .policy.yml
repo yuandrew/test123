@@ -19,8 +19,8 @@ approval_rules:
         - "Check for Unsafe Code Changes"
     requires:
       count: 1
-      teams:
-        - "microsoft/hvlite-unsafe-reviewers"
+      users:
+        - "yuandrew"
     options:
       # If true, the approvals of someone who has committed to the pull request are
       # considered when calculating the status. The pull request author is considered
